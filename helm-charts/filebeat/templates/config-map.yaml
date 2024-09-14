@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+  namespace: filebeat
+  labels:
+    k8s-app: filebeat
+  annotations:
+    co.elastic.logs.json-logging/json.keys_under_root: "true"
+    co.elastic.logs.json-logging/json.add_error_key: "true"
+    co.elastic.logs.json-logging/json.message_key: "message"
+data:
+  filebeat.yml: |-
+    # To enable hints based autodiscover, remove `filebeat.inputs` configuration and uncomment this:
+    filebeat.autodiscover:
+     providers:
+       - type: kubernetes
+         node: ${NODE_NAME}
+         hints.enabled: true
+         hints.default_config:
+           type: container
+           paths:
+             - /var/log/containers/*${data.kubernetes.container.id}.log
+    processors:
+      - drop_event:
+          when:
+            not:
+              or:
+              - equals:
+                  kubernetes.namespace: "ingress-nginx"
+              - equals:
+                  kubernetes.namespace: "apisix"
+              - equals:
+                  kubernetes.namespace: "beta"
+              - equals:
+                  kubernetes.namespace: "prod"
+    output.kafka:
+      # initial brokers for reading cluster metadata
+      hosts: ["10.0.129.67:9092"]
+      # message topic selection + partitioning
+      topic: 'log.k8s'
+      username: ${USERNAME}
+      password: ${PASSWORD}
+      partition.round_robin:
+        reachable_only: false
+      required_acks: 1
+      compression: gzip
+      max_message_bytes: 1000000

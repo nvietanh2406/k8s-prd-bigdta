@@ -1,0 +1,172 @@
+stages:
+  - sync-haproxy-config
+  - sync-git-to-vault
+  - sync-wazuh-config
+
+sync-haproxy-config:
+  environment: $CI_COMMIT_REF_NAME
+  stage: sync-haproxy-config
+  tags:
+    - k8s-prod-runner-docker
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
+      changes:
+        - configs/haproxy-config/**/*
+        - .gitlab-ci.yml
+  image: haproxy:2.0.29
+  before_script:
+    - apt update
+    - apt install git openssh-client -y
+    - export TIMESTAMP=$(date +%s%N)
+    - cp $HAPROXY_SSH_KEY ./id_rsa
+    - chmod 400 ./id_rsa
+
+  script:
+    - echo update HAProxy config
+
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$TPC_PROD_HAPROXY_SERVER_01 "sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak-${TIMESTAMP}"
+    - scp -i ./id_rsa ./configs/haproxy-config/prod01-haproxy.conf ubuntu@$TPC_PROD_HAPROXY_SERVER_01:/home/ubuntu/prod01-haproxy.conf
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$TPC_PROD_HAPROXY_SERVER_01 "sudo haproxy -f /home/ubuntu/prod01-haproxy.conf -c" > output1
+    - tail -n 1 output1 | grep -q "Configuration file is valid" && echo "Valid" || ( echo "Invalid" && exit 1 )
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$TPC_PROD_HAPROXY_SERVER_01 "sudo rm /etc/haproxy/haproxy.cfg"
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$TPC_PROD_HAPROXY_SERVER_01 "sudo mv /home/ubuntu/prod01-haproxy.conf /etc/haproxy/haproxy.cfg"
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$TPC_PROD_HAPROXY_SERVER_01 "sudo service haproxy restart"
+
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak-${TIMESTAMP}"
+    - scp -i ./id_rsa ./configs/haproxy-config/prod01-haproxy.conf ubuntu@$HAPROXY_SERVER_01:/home/ubuntu/prod01-haproxy.conf
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo haproxy -f /home/ubuntu/prod01-haproxy.conf -c" > output1
+    - tail -n 1 output1 | grep -q "Configuration file is valid" && echo "Valid" || ( echo "Invalid" && exit 1 )
+
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_02 "sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak-${TIMESTAMP}"
+    - scp -i ./id_rsa ./configs/haproxy-config/prod01-haproxy.conf ubuntu@$HAPROXY_SERVER_02:/home/ubuntu/prod01-haproxy.conf
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_02 "sudo haproxy -f /home/ubuntu/prod01-haproxy.conf -c" > output2
+    - tail -n 1 output2 | grep -q "Configuration file is valid" && echo "Valid" || ( echo "Invalid" && exit 1 )
+
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo rm /etc/haproxy/haproxy.cfg"
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo mv /home/ubuntu/prod01-haproxy.conf /etc/haproxy/haproxy.cfg"
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo service haproxy restart"
+
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_02 "sudo rm /etc/haproxy/haproxy.cfg"
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_02 "sudo mv /home/ubuntu/prod01-haproxy.conf /etc/haproxy/haproxy.cfg"
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_02 "sudo service haproxy restart"
+
+sync-git-to-vault:
+  environment: $CI_COMMIT_REF_NAME
+  stage: sync-git-to-vault
+  tags:
+    - k8s-prod-runner-docker
+  image: vault:1.13.3
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
+      changes:
+        - env/**/*
+        - .gitlab-ci.yml
+  script:
+    - cd ./env
+
+    # sync new beta-projects-secrets to k8s
+    - |
+      command="./medusa import beta-projects-secrets"
+      for file in ./beta/*.json; do
+          filename=$(basename "$file")
+          full_command="$command $file"
+          echo $full_command
+          $full_command
+      done
+
+    # sync new prod-projects-secrets to k8s
+    - |
+      command="./medusa import prod-projects-secrets"
+      for file in ./prod/*.json; do
+          filename=$(basename "$file")
+          full_command="$command $file"
+          echo $full_command
+          $full_command
+      done
+
+sync-wazuh-config:
+  environment: $CI_COMMIT_REF_NAME
+  stage: sync-wazuh-config
+  tags:
+    - k8s-prod-runner-docker
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
+      changes:
+        - configs/wazuh-config/**/*
+        - .gitlab-ci.yml
+  image: 
+  before_script:
+    - apt update
+    - apt install git openssh-client -y
+    - export TIMESTAMP=$(date +%s%N)
+    - cp $HAPROXY_SSH_KEY ./id_rsa
+    - chmod 400 ./id_rsa
+
+  script:
+    - echo update wazuh config
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no datxadmin@$tpc_waz_master01 "sudo cp /var/ossec/etc/ossec.conf /var/ossec/etc/ossec.conf.bak-${TIMESTAMP}"
+    - scp -i ./id_rsa ./configs/wazuh-config/ossec.conf datxadmin@$tpc_waz_master01:/home/datxadmin/ossec.conf
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no datxadmin@$tpc_waz_master01 "sudo rm /var/ossec/etc/ossec.conf"
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no datxadmin@$tpc_waz_master01 "sudo mv /home/datxadmin/ossec.conf  /var/ossec/etc/ossec.conf"
+
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no datxadmin@$tpc_waz_master01 "sudo cp /var/ossec/etc/shared/default/agent.conf /var/ossec/etc/shared/default/agent.conf.bak-${TIMESTAMP}"
+    - scp -i ./id_rsa ./configs/wazuh-config/agent.conf datxadmin@$tpc_waz_master01:/home/datxadmin/agent.conf
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no datxadmin@$tpc_waz_master01 "sudo rm /var/ossec/etc/shared/default/agent.conf"
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no datxadmin@$tpc_waz_master01 "sudo mv /home/datxadmin/agent.conf  /var/ossec/etc/shared/default/agent.conf"
+
+    - ssh -i ./id_rsa -o StrictHostKeyChecking=no datxadmin@$tpc_waz_master01 "sudo service wazuh-manager restart"
+
+
+
+# renew-ssl-haproxy:
+#   environment: $CI_COMMIT_REF_NAME
+#   stage: sync-haproxy-config
+#   tags:
+#     - k8s-prod-runner-docker
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE == "schedule"
+#       when: always
+#       allow_failure: false
+#     - if: $CI_COMMIT_REF_NAME == "master"
+#       changes:
+#         - .gitlab-ci.yml
+#       allow_failure: false
+#     - when: manual
+#       allow_failure: false
+#   image: haproxy:2.0.29
+#   before_script:
+#     - apt update
+#     - apt install git openssh-client -y
+#     - export TIMESTAMP=$(date +%s%N)
+#     - cp $HAPROXY_SSH_KEY ./id_rsa
+#     - chmod 400 ./id_rsa
+
+#   script:
+#     - export TIMESTAMP=$(date +%s%N)
+#     - echo Renew SSL Haproxy
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo certbot renew --dry-run --force-renewal --webroot --webroot-path /root/ssl-webroot/"
+
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo mv /etc/ssl/datx/order.xwealth.bvote.vn.pem /etc/ssl/datx-ssl-backup/order.xwealth.bvote.vn.pem.bak-${TIMESTAMP}"
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo cat /etc/letsencrypt/live/order.xwealth.bvote.vn/privkey.pem /etc/letsencrypt/live/order.xwealth.bvote.vn/fullchain.pem | sudo tee /etc/ssl/datx/order.xwealth.bvote.vn.pem"
+
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo mv /etc/ssl/datx/order.xwealth.vixs.vn.pem /etc/ssl/datx-ssl-backup/order.xwealth.vixs.vn.pem.bak-${TIMESTAMP}"
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo cat /etc/letsencrypt/live/order.xwealth.vixs.vn/privkey.pem /etc/letsencrypt/live/order.xwealth.vixs.vn/fullchain.pem | sudo tee /etc/ssl/datx/order.xwealth.vixs.vn.pem"
+
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo mv /etc/ssl/datx/order.xwealth.f247.com.pem /etc/ssl/datx-ssl-backup/order.xwealth.f247.com.pem.bak-${TIMESTAMP}"
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo cat /etc/letsencrypt/live/order.xwealth.f247.com/privkey.pem /etc/letsencrypt/live/order.xwealth.f247.com/fullchain.pem | sudo tee /etc/ssl/datx/order.xwealth.f247.com.pem"
+
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo mv /etc/ssl/datx/ps-ai.psi.vn.pem /etc/ssl/datx-ssl-backup/ps-ai.psi.vn.pem.bak-${TIMESTAMP}"
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo cat /etc/letsencrypt/live/ps-ai.psi.vn/privkey.pem /etc/letsencrypt/live/ps-ai.psi.vn/fullchain.pem | sudo tee /etc/ssl/datx/ps-ai.psi.vn.pem"
+
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo mv /etc/ssl/datx/xwealth.bvote.vn.pem /etc/ssl/datx-ssl-backup/xwealth.bvote.vn.pem.bak-${TIMESTAMP}"
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo cat /etc/letsencrypt/live/xwealth.bvote.vn/privkey.pem /etc/letsencrypt/live/xwealth.bvote.vn/fullchain.pem | sudo tee /etc/ssl/datx/xwealth.bvote.vn.pem"
+
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo mv /etc/ssl/datx/xwealth.vixs.vn.pem /etc/ssl/datx-ssl-backup/xwealth.vixs.vn.pem.bak-${TIMESTAMP}"
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo cat /etc/letsencrypt/live/xwealth.vixs.vn/privkey.pem /etc/letsencrypt/live/xwealth.vixs.vn/fullchain.pem | sudo tee /etc/ssl/datx/xwealth.vixs.vn.pem"
+
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo mv /etc/ssl/datx/xwealth.f247.com.pem /etc/ssl/datx-ssl-backup/xwealth.f247.com.pem.bak-${TIMESTAMP}"
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_01 "sudo cat /etc/letsencrypt/live/xwealth.f247.com/privkey.pem /etc/letsencrypt/live/xwealth.f247.com/fullchain.pem | sudo tee /etc/ssl/datx/xwealth.f247.com.pem"
+
+#     - scp -i ./id_rsa -r ubuntu@$HAPROXY_SERVER_01:/etc/ssl/datx ./datx
+#     - ssh -i ./id_rsa -o StrictHostKeyChecking=no ubuntu@$HAPROXY_SERVER_02 "sudo rm -rf /etc/ssl/datx"
+#     - scp -i ./id_rsa -r ./datx ubuntu@$HAPROXY_SERVER_02:/etc/ssl/datx

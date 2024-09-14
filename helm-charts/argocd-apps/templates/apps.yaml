@@ -1,0 +1,36 @@
+{{- range $app := .Values.apps }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $app.name }}
+  namespace: {{ $.Values.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    server: {{ $app.destination.server }}
+    namespace: {{ $app.destination.namespace }}
+  project: {{ $.Values.project }}
+  source:
+    repoURL: {{ coalesce $app.source.repoURL $.Values.repoURL }}
+    targetRevision: {{ $app.source.targetRevision | default "HEAD" }}
+    path: {{ $app.source.path }}
+    {{- if $app.source.chart }}
+    chart: {{ $app.source.chart }}
+    {{- end }}
+    helm:
+      releaseName: {{ $app.name }}
+      {{- if $app.source.valueFiles }}
+      valueFiles:
+      {{- range $valueFile := $app.source.valueFiles }}
+      - {{ $valueFile }}
+      {{- end }}
+      {{- end }}
+  {{- if $app.ignoreDifferences }}
+  ignoreDifferences:
+{{ toYaml $app.ignoreDifferences | indent 2 }}
+  {{- end }}
+  syncPolicy:
+{{ toYaml (coalesce $app.syncPolicy $.Values.syncPolicy) | indent 4 }}
+{{- end }}

@@ -1,0 +1,30 @@
+frontend k8s_api_lb_front
+    mode tcp
+    option tcplog
+    bind 10.0.129.200:8443
+    default_backend k8s_api_lb_backend
+
+backend k8s_api_lb_backend
+    mode tcp
+    balance roundrobin
+    option httpchk GET /healthz HTTP/1.1\r\nHost:\ 10.0.129.200
+    option tcp-check
+    server datx-k8s-prod01-master-01 10.0.129.11:6443 check fall 3 rise 2
+    server datx-k8s-prod01-master-02 10.0.129.12:6443 check fall 3 rise 2
+    server datx-k8s-prod01-master-03 10.0.129.13:6443 check fall 3 rise 2
+
+listen stats
+    bind *:8080
+    mode http
+    stats enable
+    stats uri /
+
+frontend frontend_haproxy_dashboard
+    bind *:8080
+    mode http
+
+backend backend_haproxy_dashboard
+    mode http
+    balance roundrobin
+    option httpchk GET /
+    server localhost_server 127.0.0.1:8080 check

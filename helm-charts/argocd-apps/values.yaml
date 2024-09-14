@@ -1,0 +1,897 @@
+namespace: argocd
+repoURL: https://github.com/nvietanh2406/k8s-prd-bigdta.git
+project: default
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
+    - Replace=true
+    - ApplyOutOfSyncOnly=true
+    - PruneLast=true
+apps:
+  # General services
+  # rabbitmq
+  # - name: rabbitmq-prod
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: rabbitmq-prod
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/rabbitmq-prod
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: rabbitmq-beta
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: rabbitmq-beta
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/rabbitmq-beta
+  #     valueFiles:
+  #       - values.yaml
+  # kafka
+  # - name: kafka-connect
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: kafka-connect
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/kafka-connect/kafka-connect
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: kafka-ui
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: kafka-connect
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/kafka-connect/kafka-ui
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: kafka-schema-registry
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: kafka-connect
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/kafka-connect/schema-registry
+  #     valueFiles:
+  #       - values.yaml
+
+  - name: argocd-apps
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: argocd-apps
+    source:
+      targetRevision: master
+      path: helm-charts/argocd-apps
+      valueFiles:
+        - values.yaml
+
+  - name: kube-prometheus-stack
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: monitoring
+    source:
+      targetRevision: master
+      path: helm-charts/kube-prometheus-stack
+      valueFiles:
+        - values.yaml
+
+  - name: prometheus-blackbox-exporter
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: monitoring
+    source:
+      targetRevision: master
+      path: helm-charts/prometheus-blackbox-exporter
+      valueFiles:
+        - values.yaml
+  # # robusta manage chanel alert
+  # - name: robusta
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: robusta
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/robusta
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: vault
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: vault
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/vault
+  #     valueFiles:
+  #       - values.yaml
+
+  - name: reloader
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: reloader
+    source:
+      targetRevision: master
+      path: helm-charts/reloader
+      valueFiles:
+        - values.yaml
+
+  - name: metrics-server
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: metrics-server
+    source:
+      targetRevision: master
+      path: helm-charts/metrics-server
+      valueFiles:
+        - values.yaml
+
+  - name: trivy-system
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: trivy-system
+    source:
+      targetRevision: master
+      path: helm-charts/trivy-operator
+      valueFiles:
+        - values.yaml
+
+  - name: external-secrets
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: external-secrets
+    source:
+      targetRevision: master
+      path: helm-charts/external-secrets
+      valueFiles:
+        - values.yaml
+
+  - name: redis
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: redis
+    source:
+      targetRevision: master
+      path: helm-charts/redis
+      valueFiles:
+        - values.yaml
+
+  # - name: redis-beta
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: redis-beta
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/redis-beta
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: elasticsearch
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: elasticsearch
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/elasticsearch
+  #     valueFiles:
+  #       - values.yaml
+
+  - name: logstash
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: logstash
+    source:
+      targetRevision: master
+      path: helm-charts/logstash
+      valueFiles:
+        - values.yaml
+
+  - name: filebeat
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: filebeat
+    source:
+      targetRevision: master
+      path: helm-charts/filebeat
+      valueFiles:
+        - values.yaml
+
+  - name: pmm
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: pmm
+    source:
+      targetRevision: master
+      path: helm-charts/pmm
+      valueFiles:
+        - values.yaml
+
+  # # Beta projects
+
+  # - name: beta-k8s-secret
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta/k8s-secret
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-tradingview
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-tradingview
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-tradingview-wrapper
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-tradingview-wrapper
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-trading-view-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-trading-view-api
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: vix-beta-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/vix-beta-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: psi-beta-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/psi-beta-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+  # - name: bsc-beta-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/bsc-beta-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: bsc-main-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/bsc-main-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: f247-beta-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/f247-beta-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: bvote-beta-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/bvote-beta-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: copytrade-beta-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/copytrade-beta-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-copytrade-backend
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-copytrade-backend
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-datx-dashboard-api-v2
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-datx-dashboard-api-v2
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-datx-core-v3
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-datx-core-v3
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-datx-webapp-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-datx-webapp-api
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-datx-sale-portal
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-datx-sale-portal
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-datx-sale-portal-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-datx-sale-portal-api
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-datx-sale-portal-collect-service
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-datx-sale-portal-collect-service
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-node-core-notification-service
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-node-core-notification-service
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-stock-account-manager
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-stock-account-manager
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-rating-widget
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-rating-widget
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-ai-broker
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-ai-broker
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-authentication
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-authentication
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-cms-2-frontend
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-cms-2-frontend
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-datx-cms-v2
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-datx-cms-v2
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-datx-insight-v2
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-datx-insight-v2
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-market-price-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-market-price-api
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-market-price-vnd-trade
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-market-price-vnd-trade
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-order-website
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-order-website
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: beta-payment-gateway
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: beta
+  #   source:
+  #     targetRevision: master
+  #     path: projects/beta-payment-gateway
+  #     valueFiles:
+  #       - values.yaml
+  
+  # # ============================
+  # # Production projects
+
+  # - name: main-portal-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/template-stack/sample-application
+  #     valueFiles:
+  #       - $values/projects/main/portal-api/values.yaml
+
+  # - name: main-k8s-secret
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main/k8s-secret
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-ui-components
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/template-stack/sample-application
+  #     valueFiles:
+  #       - $values/projects/main/datx-ui-components/values.yaml
+
+  # - name: main-tradingview
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-tradingview
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-tradingview-wrapper
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-tradingview-wrapper
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-trading-view-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-trading-view-api
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: vix-main-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/vix-main-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: psi-main-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/psi-main-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: bvote-main-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/bvote-main-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: copytrade-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/copytrade-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-copytrade-backend
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-copytrade-backend
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-dashboard-api-v2
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-datx-dashboard-api-v2
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-webapp-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-datx-webapp-api
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-sale-portal
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-datx-sale-portal
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-sale-portal-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-datx-sale-portal-api
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-sale-portal-collect-service
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-datx-sale-portal-collect-service
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-node-core-notification-service
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-node-core-notification-service
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-rating-widget
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-rating-widget
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-ai-broker
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-ai-broker
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-stock-account-manager
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-stock-account-manager
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-order-website
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-order-website
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: f247-main-xwealth-platform-v1
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/f247-main-xwealth-platform-v1
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-market-price-api
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-market-price-api
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-market-price-vnd-trade
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-market-price-vnd-trade
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-authentication
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-authentication
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-insight-v2
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-datx-insight-v2
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-cms-2-frontend
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-cms-2-frontend
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-mobile-document
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-mobile-document
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-cms-v2
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-datx-cms-v2
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-datx-core-v3
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-datx-core-v3
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-svix-webhooks
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-svix-webhooks
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-portal-x
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-portal-x
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-alert-worker
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-alert-worker
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-luckydraw
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-luckydraw
+  #     valueFiles:
+  #       - values.yaml
+
+  # - name: main-payment-gateway
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: projects/main-payment-gateway
+  #     valueFiles:
+  #       - values.yaml
+  # - name: main-iframe-website
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: prod
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/template-stack/sample-application
+  #     valueFiles:
+  #       - $values/projects/main-iframe-website/values.yaml

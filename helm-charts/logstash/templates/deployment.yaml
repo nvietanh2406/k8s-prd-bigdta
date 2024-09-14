@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: logstash
+  name: logstash
+  namespace: logstash
+spec:
+  replicas: 5
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      service: logstash
+  template:
+    metadata:
+      labels:
+        service: logstash
+    spec:
+      imagePullSecrets:
+      - name: harbor-registry-credentials
+      containers:
+      - image: harbor.datx.vn/dso/logstash:main-20231128171144-14c5e947
+        imagePullPolicy: IfNotPresent
+        name: logstash
+        ports:
+        - containerPort: 5044
+          protocol: TCP
+        resources: {}
+        livenessProbe:
+          httpGet:
+            path: /_node/os?pretty
+            port: 9600
+          failureThreshold: 3
+          periodSeconds: 30
+          timeoutSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /_node/os?pretty
+            port: 9600
+          failureThreshold: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
