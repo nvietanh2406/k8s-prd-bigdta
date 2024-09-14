@@ -92,26 +92,26 @@ apps:
       path: helm-charts/prometheus-blackbox-exporter
       valueFiles:
         - values.yaml
-  # # robusta manage chanel alert
-  # - name: robusta
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: robusta
-  #   source:
-  #     targetRevision: master
-  #     path: helm-charts/robusta
-  #     valueFiles:
-  #       - values.yaml
+  # robusta manage chanel alert
+  - name: robusta
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: robusta
+    source:
+      targetRevision: master
+      path: helm-charts/robusta
+      valueFiles:
+        - values.yaml
 
-  # - name: vault
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: vault
-  #   source:
-  #     targetRevision: master
-  #     path: helm-charts/vault
-  #     valueFiles:
-  #       - values.yaml
+  - name: vault
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: vault
+    source:
+      targetRevision: master
+      path: helm-charts/vault
+      valueFiles:
+        - values.yaml
 
   - name: reloader
     destination:
