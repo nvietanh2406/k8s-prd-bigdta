@@ -183,25 +183,25 @@ apps:
   #     valueFiles:
   #       - values.yaml
 
-  - name: logstash
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: logstash
-    source:
-      targetRevision: master
-      path: helm-charts/logstash
-      valueFiles:
-        - values.yaml
+  # - name: logstash
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: logstash
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/logstash
+  #     valueFiles:
+  #       - values.yaml
 
-  - name: filebeat
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: filebeat
-    source:
-      targetRevision: master
-      path: helm-charts/filebeat
-      valueFiles:
-        - values.yaml
+  # - name: filebeat
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: filebeat
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/filebeat
+  #     valueFiles:
+  #       - values.yaml
 
   - name: pmm
     destination:
