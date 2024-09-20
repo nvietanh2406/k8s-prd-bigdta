@@ -213,17 +213,17 @@ apps:
       valueFiles:
         - values.yaml
 
-  # # Beta projects
+  # # Bigdata projects
 
-  # - name: beta-k8s-secret
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: beta
-  #   source:
-  #     targetRevision: master
-  #     path: projects/beta/k8s-secret
-  #     valueFiles:
-  #       - values.yaml
+  - name: airflow
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: airflow
+    source:
+      targetRevision: master
+      path: helm-charts/airflow
+      valueFiles:
+        - values.yaml
 
   # - name: beta-tradingview
   #   destination:
