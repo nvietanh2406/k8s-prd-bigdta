@@ -2166,7 +2166,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: "longhorn-storage-retain"
+          storageClassName: "longhorn-retain"
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:

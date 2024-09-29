@@ -1,3 +1,5 @@
+# argocd
+admin / 6dea16e5-a9e3-4d1e-9d1a-c4a984fea37e
 # DATX K8S Production 01
 
 This repo contains all helm charts that will be deployed to DATX K8S Production Cluster
