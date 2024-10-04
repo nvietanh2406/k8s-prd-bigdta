@@ -225,6 +225,16 @@ apps:
       valueFiles:
         - values.yaml
 
+  - name: spark-operator-app
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: spark-operator
+    source:
+      targetRevision: master
+      path: helm-charts/spark-operator
+      valueFiles:
+        - values.yaml
+
   # - name: beta-tradingview
   #   destination:
   #     server: https://kubernetes.default.svc
