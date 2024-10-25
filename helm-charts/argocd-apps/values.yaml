@@ -203,15 +203,15 @@ apps:
   #     valueFiles:
   #       - values.yaml
 
-  - name: pmm
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: pmm
-    source:
-      targetRevision: master
-      path: helm-charts/pmm
-      valueFiles:
-        - values.yaml
+  # - name: pmm
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: pmm
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/pmm
+  #     valueFiles:
+  #       - values.yaml
 
   # # Bigdata projects
 
