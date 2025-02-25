@@ -73,15 +73,15 @@ apps:
       valueFiles:
         - values.yaml
 
-  - name: kube-prometheus-stack
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: monitoring
-    source:
-      targetRevision: master
-      path: helm-charts/kube-prometheus-stack
-      valueFiles:
-        - values.yaml
+  # - name: kube-prometheus-stack
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: monitoring
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/kube-prometheus-stack
+  #     valueFiles:
+  #       - values.yaml
 
   - name: prometheus-blackbox-exporter
     destination:
@@ -113,15 +113,15 @@ apps:
   #     valueFiles:
   #       - values.yaml
 
-  - name: reloader
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: reloader
-    source:
-      targetRevision: master
-      path: helm-charts/reloader
-      valueFiles:
-        - values.yaml
+  # - name: reloader
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: reloader
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/reloader
+  #     valueFiles:
+  #       - values.yaml
 
   - name: metrics-server
     destination:
@@ -133,35 +133,35 @@ apps:
       valueFiles:
         - values.yaml
 
-  - name: trivy-system
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: trivy-system
-    source:
-      targetRevision: master
-      path: helm-charts/trivy-operator
-      valueFiles:
-        - values.yaml
+  # - name: trivy-system
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: trivy-system
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/trivy-operator
+  #     valueFiles:
+  #       - values.yaml
 
-  - name: external-secrets
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: external-secrets
-    source:
-      targetRevision: master
-      path: helm-charts/external-secrets
-      valueFiles:
-        - values.yaml
+  # - name: external-secrets
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: external-secrets
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/external-secrets
+  #     valueFiles:
+  #       - values.yaml
 
-  - name: redis
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: redis
-    source:
-      targetRevision: master
-      path: helm-charts/redis
-      valueFiles:
-        - values.yaml
+  # - name: redis
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: redis
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/redis
+  #     valueFiles:
+  #       - values.yaml
 
   # - name: redis-beta
   #   destination:
@@ -183,35 +183,35 @@ apps:
   #     valueFiles:
   #       - values.yaml
 
-  - name: logstash
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: logstash
-    source:
-      targetRevision: master
-      path: helm-charts/logstash
-      valueFiles:
-        - values.yaml
+  # - name: logstash
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: logstash
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/logstash
+  #     valueFiles:
+  #       - values.yaml
 
-  - name: filebeat
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: filebeat
-    source:
-      targetRevision: master
-      path: helm-charts/filebeat
-      valueFiles:
-        - values.yaml
+  # - name: filebeat
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: filebeat
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/filebeat
+  #     valueFiles:
+  #       - values.yaml
 
-  - name: pmm
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: pmm
-    source:
-      targetRevision: master
-      path: helm-charts/pmm
-      valueFiles:
-        - values.yaml
+  # - name: pmm
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: pmm
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/pmm
+  #     valueFiles:
+  #       - values.yaml
 
   # # Beta projects
 
