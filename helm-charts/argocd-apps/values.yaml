@@ -92,26 +92,26 @@ apps:
       path: helm-charts/prometheus-blackbox-exporter
       valueFiles:
         - values.yaml
-  # # robusta manage chanel alert
-  # - name: robusta
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: robusta
-  #   source:
-  #     targetRevision: master
-  #     path: helm-charts/robusta
-  #     valueFiles:
-  #       - values.yaml
+  # robusta manage chanel alert
+  - name: robusta
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: robusta
+    source:
+      targetRevision: master
+      path: helm-charts/robusta
+      valueFiles:
+        - values.yaml
 
-  # - name: vault
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: vault
-  #   source:
-  #     targetRevision: master
-  #     path: helm-charts/vault
-  #     valueFiles:
-  #       - values.yaml
+  - name: vault
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: vault
+    source:
+      targetRevision: master
+      path: helm-charts/vault
+      valueFiles:
+        - values.yaml
 
   # - name: reloader
   #   destination:
@@ -212,18 +212,50 @@ apps:
   #     path: helm-charts/pmm
   #     valueFiles:
   #       - values.yaml
+=======
 
-  # # Beta projects
-
-  # - name: beta-k8s-secret
+  # - name: filebeat
   #   destination:
   #     server: https://kubernetes.default.svc
-  #     namespace: beta
+  #     namespace: filebeat
   #   source:
   #     targetRevision: master
-  #     path: projects/beta/k8s-secret
+  #     path: helm-charts/filebeat
   #     valueFiles:
   #       - values.yaml
+
+  # - name: pmm
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: pmm
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/pmm
+  #     valueFiles:
+  #       - values.yaml
+
+  # # Bigdata projects
+
+  - name: airflow
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: airflow
+    source:
+      targetRevision: master
+      path: helm-charts/airflow
+      valueFiles:
+        - values.yaml
+
+  - name: spark-operator-app
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: spark-operator
+    source:
+      targetRevision: master
+      path: helm-charts/spark-operator
+      valueFiles:
+        - values.yaml
+
 
   # - name: beta-tradingview
   #   destination:

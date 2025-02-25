@@ -2166,7 +2166,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: "longhorn-storage-retain"
+          storageClassName: "longhorn-retain"
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -4674,7 +4674,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: "longhorn-storage-retain"
+          storageClassName: "longhorn-retain"
           accessModes: 
             - ReadWriteOnce
           resources:
@@ -4731,6 +4731,29 @@ prometheus:
     #       DatX_Service: 'MySQL'
     #       DatX_Service_Type: 'Database'
     #       DatX_Database_Role: 'Master - Slave'
+
+      # K8S
+      - targets: ['10.32.224.230:9100']
+        labels:
+          DatX_Env: 'prod'
+          DatX_Department: 'Infra'
+          DatX_Service: 'K8S'
+          DatX_Service_Type: 'SRV'
+          DatX_Database_Role: 'Master'
+      - targets: ['10.32.224.231:9100']
+        labels:
+          DatX_Env: 'prod'
+          DatX_Department: 'Infra'
+          DatX_Service: 'K8S'
+          DatX_Service_Type: 'SRV'
+          DatX_Database_Role: 'Worker'
+      - targets: ['10.32.224.232:9100']
+        labels:
+          DatX_Env: 'prod'
+          DatX_Department: 'Infra'
+          DatX_Service: 'K8S'
+          DatX_Service_Type: 'SRV'
+          DatX_Database_Role: 'Worker'
 
     #   #PostgresDB
     #   - targets: ['192.168.0.60:9100']

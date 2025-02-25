@@ -6,7 +6,7 @@ metadata:
   name: logstash
   namespace: logstash
 spec:
-  replicas: 5
+  replicas: 2
   revisionHistoryLimit: 0
   selector:
     matchLabels:
