@@ -103,15 +103,15 @@ apps:
       valueFiles:
         - values.yaml
 
-  - name: vault
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: vault
-    source:
-      targetRevision: master
-      path: helm-charts/vault
-      valueFiles:
-        - values.yaml
+  # - name: vault
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: vault
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/vault
+  #     valueFiles:
+  #       - values.yaml
 
   # - name: reloader
   #   destination:
@@ -212,17 +212,16 @@ apps:
   #     path: helm-charts/pmm
   #     valueFiles:
   #       - values.yaml
-=======
 
-  # - name: filebeat
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: filebeat
-  #   source:
-  #     targetRevision: master
-  #     path: helm-charts/filebeat
-  #     valueFiles:
-  #       - values.yaml
+  - name: filebeat
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: filebeat
+    source:
+      targetRevision: master
+      path: helm-charts/filebeat
+      valueFiles:
+        - values.yaml
 
   # - name: pmm
   #   destination:
