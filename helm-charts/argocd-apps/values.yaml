@@ -143,15 +143,15 @@ apps:
   #     valueFiles:
   #       - values.yaml
 
-  # - name: external-secrets
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: external-secrets
-  #   source:
-  #     targetRevision: master
-  #     path: helm-charts/external-secrets
-  #     valueFiles:
-  #       - values.yaml
+  - name: external-secrets
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: external-secrets
+    source:
+      targetRevision: master
+      path: helm-charts/external-secrets
+      valueFiles:
+        - values.yaml
 
   # - name: redis
   #   destination:
@@ -213,15 +213,15 @@ apps:
   #     valueFiles:
   #       - values.yaml
 
-  - name: filebeat
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: filebeat
-    source:
-      targetRevision: master
-      path: helm-charts/filebeat
-      valueFiles:
-        - values.yaml
+  # - name: filebeat
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: filebeat
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/filebeat
+  #     valueFiles:
+  #       - values.yaml
 
   # - name: pmm
   #   destination:
@@ -235,15 +235,15 @@ apps:
 
   # # Bigdata projects
 
-  - name: airflow
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: airflow
-    source:
-      targetRevision: master
-      path: helm-charts/airflow
-      valueFiles:
-        - values.yaml
+  # - name: airflow
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: airflow
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/airflow
+  #     valueFiles:
+  #       - values.yaml
 
   - name: spark-operator-app
     destination:
@@ -255,16 +255,25 @@ apps:
       valueFiles:
         - values.yaml
 
+  - name: stackgres-operator-app
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: spark-operator
+    source:
+      targetRevision: master
+      path: helm-charts/stackgres-operator
+      valueFiles:
+        - values.yaml
 
-  # - name: beta-tradingview
-  #   destination:
-  #     server: https://kubernetes.default.svc
-  #     namespace: beta
-  #   source:
-  #     targetRevision: master
-  #     path: projects/beta-tradingview
-  #     valueFiles:
-  #       - values.yaml
+  - name: n8n-app
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: spark-operator
+    source:
+      targetRevision: master
+      path: helm-charts/n8n
+      valueFiles:
+        - values.yaml
 
   # - name: beta-tradingview-wrapper
   #   destination:
