@@ -258,7 +258,7 @@ apps:
   - name: stackgres-operator-app
     destination:
       server: https://kubernetes.default.svc
-      namespace: spark-operator
+      namespace: stackgres
     source:
       targetRevision: master
       path: helm-charts/stackgres-operator
