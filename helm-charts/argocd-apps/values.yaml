@@ -268,7 +268,7 @@ apps:
   - name: n8n-app
     destination:
       server: https://kubernetes.default.svc
-      namespace: spark-operator
+      namespace: n8n
     source:
       targetRevision: master
       path: helm-charts/n8n
