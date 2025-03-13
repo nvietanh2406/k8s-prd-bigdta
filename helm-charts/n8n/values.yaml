@@ -34,10 +34,10 @@ hostAliases: []
 #
 ingress:
   enabled: true
-  annotations: {}
+  annotations: 
   # define a custom ingress class Name, like "traefik" or "nginx"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    - nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    - nginx.ingress.kubernetes.io/ssl-redirect: "true"
   className: "nginx"
   hosts:
     - host: workflow.nva88.mooo.com
