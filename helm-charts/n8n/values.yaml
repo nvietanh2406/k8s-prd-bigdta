@@ -39,10 +39,11 @@ ingress:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   ingressClassName: nginx
+  #className: "nginx"
   hosts:
     - host: workflow.nva88.mooo.com
       paths: 
-        - path: ""/""
+          path: /
           pathType: Prefix
           backend:
             service:
