@@ -391,7 +391,7 @@ authentication:
 grafana:
   # -- When set to `true` embed automatically Grafana into the Web Console by creating the
   #   StackGres dashboards and the read-only role used to read it from the Web Console 
-  autoEmbed: false
+  autoEmbed: true
   # -- The schema to access Grafana. By default http. (used to embed manually and
   #   automatically grafana)
   schema: http
@@ -399,7 +399,7 @@ grafana:
   #   automatically Grafana). 
   # The parameter value should point to the grafana service following the 
   #   [DNS reference](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/) `svc_name.namespace`
-  webHost:
+  webHost: kube-prometheus-grafana.monitoring
   # -- The datasource name used to create the StackGres Dashboards into Grafana
   datasourceName: Prometheus
   # -- The username to access Grafana. By default admin. (used to embed automatically
@@ -412,16 +412,16 @@ grafana:
 
   # -- (string) The namespace of secret with credentials to access Grafana. (used to
   #   embed automatically Grafana, alternative to use `user` and `password`)
-  secretNamespace:
+  secretNamespace: monitoring 
   # -- (string) The name of secret with credentials to access Grafana. (used to embed
   #   automatically Grafana, alternative to use `user` and `password`)
-  secretName:
+  secretName: kube-prometheus-stack-grafana
   # -- (string) The key of secret with username used to access Grafana. (used to embed
   #   automatically Grafana, alternative to use `user` and `password`)
-  secretUserKey:
+  secretUserKey: admin-user
   # -- (string) The key of secret with password used to access Grafana. (used to
   #   embed automatically Grafana, alternative to use `user` and `password`)
-  secretPasswordKey:
+  secretPasswordKey: admin-password
   # -- (string) The ConfigMap name with the dashboard JSONs
   #   that will be created in Grafana. If not set the default
   #   StackGres dashboards will be created. (used to embed automatically Grafana)
