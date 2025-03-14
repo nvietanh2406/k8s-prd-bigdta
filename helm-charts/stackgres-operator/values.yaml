@@ -99,7 +99,7 @@ adminui:
     #   some fee that depend on the host of the kubernetes cluster (for example this is true for EKS, GKE
     #   and AKS).
     # * Set to NodePort to expose admin UI from kubernetes nodes.
-    type: ClusterIP
+    type: NodePort
     # -- (string) LoadBalancer will get created with the IP specified in
     #   this field. This feature depends on whether the underlying cloud-provider supports specifying
     #   the loadBalancerIP when a load balancer is created. This field will be ignored if the
@@ -337,7 +337,7 @@ cert:
   certManager:
     # -- When set to `true` then Issuer and Certificate for Operator and Web Console / REST API
     #   Pods will be generated
-    autoConfigure: false
+    autoConfigure: true
     # -- The requested duration (i.e. lifetime) of the Certificates. See https://cert-manager.io/docs/reference/api-docs/#cert-manager.io%2fv1
     duration: "2160h"
     # -- How long before the currently issued certificate’s expiry cert-manager should renew the certificate. See https://cert-manager.io/docs/reference/api-docs/#cert-manager.io%2fv1
@@ -363,7 +363,7 @@ authentication:
   # -- The admin username that will be required to access the UI
   user: admin
   # -- (string) The admin password that will be required to access the UI
-  password:
+  password: 469c33d8-2af1-433a-90fd-46092630999c
   # Section to configure Web Console OIDC authentication
   oidc:
     # tlsVerification -- (string) Can be one of `required`, `certificate-validation` or `none`
