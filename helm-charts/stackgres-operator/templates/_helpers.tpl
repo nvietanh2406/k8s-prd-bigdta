@@ -1,12 +1,16 @@
-{{- define "kubectl.image" }}
-{{- if semverCompare ">=1.24" .Capabilities.KubeVersion.Version -}}
-{{- printf "%s/ongres/kubectl:v1.25.9-build-6.22" .Values.containerRegistry -}}
+{{- define "kubectl-image" }}
+{{- if semverCompare ">=1.30" .Capabilities.KubeVersion.Version -}}
+{{- printf "%s/ongres/kubectl:v1.31.3-build-6.38" .Values.containerRegistry -}}
+{{- else if semverCompare ">=1.27" .Capabilities.KubeVersion.Version -}}
+{{- printf "%s/ongres/kubectl:v1.28.15-build-6.38" .Values.containerRegistry -}}
+{{- else if semverCompare ">=1.24" .Capabilities.KubeVersion.Version -}}
+{{- printf "%s/ongres/kubectl:v1.25.16-build-6.38" .Values.containerRegistry -}}
 {{- else if semverCompare ">=1.21" .Capabilities.KubeVersion.Version -}}
-{{- printf "%s/ongres/kubectl:v1.22.17-build-6.22" .Values.containerRegistry -}}
+{{- printf "%s/ongres/kubectl:v1.22.17-build-6.38" .Values.containerRegistry -}}
 {{- else if semverCompare ">=1.18" .Capabilities.KubeVersion.Version -}}
-{{- printf "%s/ongres/kubectl:v1.19.16-build-6.22" .Values.containerRegistry -}}
+{{- printf "%s/ongres/kubectl:v1.19.16-build-6.38" .Values.containerRegistry -}}
 {{- else -}}
-{{- printf "%s/ongres/kubectl:v1.25.9-build-6.22" .Values.containerRegistry -}}
+{{- printf "%s/ongres/kubectl:v1.31.3-build-6.38" .Values.containerRegistry -}}
 {{- end -}}
 {{- end -}}
 
@@ -34,50 +38,53 @@
 {{- .Values.cert.webSecretName | default (printf "%s-%s" .Release.Name "web-certs") }}
 {{- end }}
 
-{{- define "stackgres.operator.resetCerts" }}
-{{- $upgradeSecrets := false }}
-{{- $operatorSecret := lookup "v1" "Secret" .Release.Namespace (include "cert-name" .) }}
-{{- if $operatorSecret }}
-  {{- if or (not (index $operatorSecret.data "tls.key")) (not (index $operatorSecret.data "tls.crt")) }}
-    {{- $upgradeSecrets = true }}
+{{- define "unmodificableWebapiAdminClusterRoleBinding" }}
+{{- if .Release.IsUpgrade }}
+{{- $unmodificableWebapiAdminClusterRoleBinding := false }}
+{{- $webapiAdminClusterRoleBinding := lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "stackgres-restapi-admin" }}
+{{- if $webapiAdminClusterRoleBinding }}
+  {{- if not (eq $webapiAdminClusterRoleBinding.roleRef.name "stackgres-restapi-admin") }}
+    {{- $unmodificableWebapiAdminClusterRoleBinding = true }}
   {{- end }}
-{{- else }}
-  {{- $upgradeSecrets = true }}
 {{- end }}
-{{- $webSecret := lookup "v1" "Secret" .Release.Namespace (include "web-cert-name" .) }}
-{{- if $webSecret }}
-  {{- if or (not (index $webSecret.data "tls.key")) (not (index $webSecret.data "tls.crt")) }}
-    {{- $upgradeSecrets = true }}
-  {{- end }}
+{{- if $unmodificableWebapiAdminClusterRoleBinding }}true{{- else }}false{{- end }}
 {{- else }}
-  {{- $upgradeSecrets = true }}
+false
 {{- end }}
-{{- if or $upgradeSecrets .Values.cert.resetCerts }}true{{- else }}false{{- end }}
 {{- end }}
 
-{{- define "stackgres.operator.upgradeCrds" }}
-{{- $upgradeCrds := false }}
-{{- $noStackGresCrdAvailable := true }}
-{{- $chart := .Chart }}
-{{- $crds := lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "" }}
-{{- if $crds }}
-  {{- range $crd := $crds.items }}
-    {{- if regexMatch "\\.stackgres\\.io$" $crd.metadata.name }}
-      {{- $noStackGresCrdAvailable = false }}
-      {{- $hasSameVersion := false }}
-      {{- if $crd.metadata.annotations }}
-        {{- range $key,$value := $crd.metadata.annotations }}
-          {{- if and (eq $key "stackgres.io/operatorVersion") (eq $value $chart.Version) }}
-            {{- $hasSameVersion = true }}
-          {{- end }}
-        {{- end }}
-      {{- end }}
-      {{- if not $hasSameVersion }}
-        {{- $upgradeCrds = true }}
+{{- define "allowedNamespaces" }}
+{{- $allowedNamespaces := list }}
+{{- if .Values.allowedNamespaces }}
+{{- range $namespace := .Values.allowedNamespaces }}
+  {{- $allowedNamespaces = append $allowedNamespaces $namespace }}
+{{- end }}
+{{- if not ($allowedNamespaces | has .Release.Namespace) }}
+  {{- $allowedNamespaces = append $allowedNamespaces .Release.Namespace }}
+{{- end }}
+{{- else if .Values.allowedNamespaceLabelSelector }}
+{{- $namespaces := lookup "v1" "Namespace" "" "" }}
+{{- range $namespace := $namespaces }}
+  {{- $containsAllowedNamespaceLabelSelector := true }}
+  {{- range $k,$v := $.Values.allowedNamespaceLabelSelector }}
+    {{- $containsLabel := false }}
+    {{- range $nk,$nv := $namespace.metadata.labels }}
+      {{- if and (eq $nk $k) (eq $nv $v) }}
+        {{- $containsLabel = true }}
       {{- end }}
     {{- end }}
+    {{- if not $containsLabel }}
+      {{- $containsAllowedNamespaceLabelSelector = false }}
+    {{- end }}
+  {{- end }}
+  {{- if $containsAllowedNamespaceLabelSelector }}
+    {{- $allowedNamespaces = append $allowedNamespaces $namespace.metadata.name }}
   {{- end }}
 {{- end }}
-{{- if or $noStackGresCrdAvailable $upgradeCrds }}true{{- else }}false{{- end }}
+{{- else if .Values.disableClusterRole }}
+{{- $allowedNamespaces = append $allowedNamespaces .Release.Namespace }}
+{{- else }}
+{{- $allowedNamespaces = append $allowedNamespaces "_all_namespaces_placeholder" }}
 {{- end }}
-
+{{- range $index,$namespace := $allowedNamespaces }}{{ if $index }} {{ end }}{{ $namespace }}{{ end }}
+{{- end }}
