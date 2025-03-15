@@ -399,7 +399,7 @@ grafana:
   #   automatically Grafana). 
   # The parameter value should point to the grafana service following the 
   #   [DNS reference](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/) `svc_name.namespace`
-  webHost: kube-prometheus-grafana.monitoring
+  webHost: kube-prometheus-stack-grafana.monitoring
   # -- The datasource name used to create the StackGres Dashboards into Grafana
   datasourceName: Prometheus
   # -- The username to access Grafana. By default admin. (used to embed automatically
