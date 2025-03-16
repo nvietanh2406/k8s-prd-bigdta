@@ -34,13 +34,10 @@ hostAliases: []
 #
 ingress:
   enabled: true
-  annotations: 
-  # define a custom ingress class Name, like "traefik" or "nginx"
+  annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  ingressClassName: nginx
-  #className: "nginx"
-  #kubernetes.io/ingress.class: "nginx"
+  ingressClassName: "nginx"
   hosts:
     - host: n8n.nva88.com
       paths:
@@ -55,6 +52,7 @@ ingress:
     - hosts:
         - n8n.nva88.com
       secretName: host-domain-cert
+  namespace: n8n
 
 # the main (n8n) application related configuration + Kubernetes specific settings
 # The config: {} dictionary is converted to environmental variables in the ConfigMap.
