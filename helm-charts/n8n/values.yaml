@@ -41,7 +41,7 @@ ingress:
   #ingressClassName: nginx
   className: "nginx"
   hosts:
-    - host: workflow.nva88.mooo.com
+    - host: n8n.nva88.com
       paths: 
           path: "/"
           pathType: Prefix
@@ -52,7 +52,7 @@ ingress:
                 number: 5678
   tls:
     - hosts:
-        - workflow.nva88.mooo.com
+        - n8n.nva88.com
       secretName: host-domain-cert
 
 # the main (n8n) application related configuration + Kubernetes specific settings
