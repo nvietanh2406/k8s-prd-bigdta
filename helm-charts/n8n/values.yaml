@@ -43,8 +43,8 @@ ingress:
   #kubernetes.io/ingress.class: "nginx"
   hosts:
     - host: n8n.nva88.com
-      paths: 
-          path: "/"
+      paths:
+        - path: "/"
           pathType: Prefix
           backend:
             service:
