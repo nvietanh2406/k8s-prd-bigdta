@@ -37,7 +37,8 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  ingressClassName: "nginx"
+  #ingressClassName: "nginx"
+  className: "nginx"
   hosts:
     - host: n8n.nva88.com
       paths:
