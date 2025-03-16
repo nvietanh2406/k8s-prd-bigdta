@@ -38,8 +38,9 @@ ingress:
   # define a custom ingress class Name, like "traefik" or "nginx"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  #ingressClassName: nginx
-  className: "nginx"
+  ingressClassName: nginx
+  #className: "nginx"
+  #kubernetes.io/ingress.class: "nginx"
   hosts:
     - host: n8n.nva88.com
       paths: 
