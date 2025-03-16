@@ -48,7 +48,7 @@ ingress:
             service:
               name: n8n-app
               port:
-                number: 5678
+                number: 80
   tls:
     - hosts:
         - n8n.nva88.com
