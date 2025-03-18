@@ -153,6 +153,16 @@ apps:
   #     valueFiles:
   #       - values.yaml
 
+  - name: cert-manager-app
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: cert-manager
+    source:
+      targetRevision: master
+      path: helm-charts/external-secrets
+      valueFiles:
+        - values.yaml
+
   # - name: redis
   #   destination:
   #     server: https://kubernetes.default.svc
