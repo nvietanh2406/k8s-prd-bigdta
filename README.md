@@ -2,6 +2,10 @@
 admin / 6dea16e5-a9e3-4d1e-9d1a-c4a984fea37e
 # DATX K8S Production 01
 
+# Dremio
+https://www.dremio.com/blog/a-notebook-for-getting-started-with-project-nessie-apache-iceberg-and-apache-spark/
+https://www.dremio.com/blog/deep-dive-into-configuring-your-apache-iceberg-catalog-with-apache-spark/
+
 This repo contains all helm charts that will be deployed to DATX K8S Production Cluster
 
 Gitlab Deployer Token: xkYB7LKixvyL4U5gssRs
