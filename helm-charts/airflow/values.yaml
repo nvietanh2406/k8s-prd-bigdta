@@ -83,7 +83,7 @@ images:
   airflow:
     # repository: dockerhub.dsc.com.vn/dsc_datawarehouse/airflow
     # tag: 2.9.3-openmetadata-1.1.1.0-minio
-    repository:apache/airflow
+    repository: apache/airflow
     tag: 2.9.3
     # Specifying digest takes precedence over tag.
     digest: ~
@@ -2628,19 +2628,20 @@ redis:
 # Auth secret for a private registry
 # This is used if pulling airflow images from a private registry
 registry:
-  secretName: dockerhub
+  secretName: {}
+  # secretName: dockerhub
   # Example:
   # connection:
   #   user: ~
   #   pass: ~
   #   host: ~
   #   email: ~
-  # connection: {}
-  connection:
-    user: sync_dwh
-    pass: Admin@123
-    host: dockerhub.dsc.com.vn
-    email: sync_dwh@dsc.com.vn
+  connection: {}
+  # connection:
+  #   user: sync_dwh
+  #   pass: Admin@123
+  #   host: dockerhub.dsc.com.vn
+  #   email: sync_dwh@dsc.com.vn
 
 # Elasticsearch logging configuration
 elasticsearch:
