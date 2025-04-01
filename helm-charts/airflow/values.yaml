@@ -65,12 +65,12 @@ containerLifecycleHooks: {}
 airflowHome: /opt/airflow
 
 # Default airflow repository -- overridden by all the specific images below
-# defaultAirflowRepository: apache/airflow
-defaultAirflowRepository: dockerhub.dsc.com.vn/dsc_datawarehouse/airflow
+defaultAirflowRepository: apache/airflow
+# defaultAirflowRepository: dockerhub.dsc.com.vn/dsc_datawarehouse/airflow
 
 # Default airflow tag to deploy
-# defaultAirflowTag: "2.9.3"
-defaultAirflowTag: "2.9.3-openmetadata-1.1.1.0-minio"
+defaultAirflowTag: "2.9.3"
+# defaultAirflowTag: "2.9.3-openmetadata-1.1.1.0-minio"
 
 # Default airflow digest. If specified, it takes precedence over tag
 defaultAirflowDigest: ~
@@ -81,8 +81,10 @@ airflowVersion: "2.9.3"
 # Images
 images:
   airflow:
-    repository: dockerhub.dsc.com.vn/dsc_datawarehouse/airflow
-    tag: 2.9.3-openmetadata-1.1.1.0-minio
+    # repository: dockerhub.dsc.com.vn/dsc_datawarehouse/airflow
+    # tag: 2.9.3-openmetadata-1.1.1.0-minio
+    repository:apache/airflow
+    tag: 2.9.3
     # Specifying digest takes precedence over tag.
     digest: ~
     pullPolicy: Always
