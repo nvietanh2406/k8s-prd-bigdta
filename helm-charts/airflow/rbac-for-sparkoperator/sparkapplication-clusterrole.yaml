@@ -1,0 +1,26 @@
+# sparkapplication-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sparkapplication-manager
+rules:
+  - apiGroups:
+      - "sparkoperator.k8s.io"
+    resources:
+      - sparkapplications
+    verbs:
+      - create
+      - get
+      - list
+      - update
+      - delete
+  - apiGroups: [""]
+    resources:
+      - configmaps
+    verbs:
+      - create
+      - get
+      - list
+      - update
+      - delete
+      - deletecollection

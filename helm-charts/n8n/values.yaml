@@ -37,10 +37,18 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "10s"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600s"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600s"
+    nginx.ingress.kubernetes.io/load-balance: "round_robin"
   #ingressClassName: "nginx"
   className: "nginx"
   hosts:
-    - host: n8n.nva88.com
+    - host: n8n-dta.dsc.com.vn
       paths:
         - path: "/"
           pathType: Prefix
@@ -51,7 +59,7 @@ ingress:
                 number: 80
   tls:
     - hosts:
-        - n8n.nva88.com
+        - n8n-dta.dsc.com.vn
       secretName: host-domain-cert
   namespace: n8n
 
@@ -59,24 +67,29 @@ ingress:
 # The config: {} dictionary is converted to environmental variables in the ConfigMap.
 main:
   # See https://docs.n8n.io/hosting/configuration/environment-variables/ for all values.
-  config: {}
-  #    n8n:
-  #    db:
-  #      type: postgresdb
-  #      postgresdb:
-  #        host: 192.168.0.52
+  config: 
+    n8n:
+      db:
+        type: postgresdb
+        postgresdb:
+          host: 10.90.10.151
+          port: 6000
+          database: n8n
+          schema: public
+          user: postgres
+          ssl_enabled: false
 
   # Dictionary for secrets, unlike config:, the values here will end up in the secret file.
   # The YAML entry db.postgresdb.password: my_secret is transformed DB_POSTGRESDB_password=bXlfc2VjcmV0
   # See https://docs.n8n.io/hosting/configuration/environment-variables/
-  secret: {}
-  #    n8n:
+  secret:
+    n8n:
   #     if you run n8n stateless, you should provide an encryption key here.
   #      encryption_key:
   #
-  #    database:
-  #      postgresdb:
-  #        password: 'big secret'
+      database:
+        postgresdb:
+          password: '0e82-707e-4209-899'
 
   # Extra environmental variables, so you can reference other configmaps and secrets into n8n as env vars.
   extraEnv:
@@ -85,12 +98,24 @@ main:
   #        secretKeyRef:
   #          name: db-app
   #          key: dbname
-  #
+    N8N_DB_POSTGRESDB_NAME:
+      value: "n8n"
+    N8N_DB_POSTGRESDB_HOST:
+      value: "10.90.10.151"
+    N8N_DB_POSTGRESDB_PORT:
+      value: "6000"
+    N8N_DB_POSTGRESDB_USER:
+      value: "postgres"
+    N8N_DB_POSTGRESDB_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: n8n-app-app-secret
+          key: N8N_DATABASE_POSTGRESDB_PASSWORD
   # N8n Kubernetes specific settings
   #
   persistence:
     # If true, use a Persistent Volume Claim, If false, use emptyDir
-    enabled: false
+    enabled: true
     # what type volume, possible options are [existing, emptyDir, dynamic] dynamic for Dynamic Volume Provisioning, existing for using an existing Claim
     type: emptyDir
     # Persistent Volume Storage Class
@@ -100,7 +125,7 @@ main:
     #   set, choosing the default provisioner.  (gp2 on AWS, standard on
     #   GKE, AWS & OpenStack)
     #
-    # storageClass: "-"
+    storageClass: "nfs-retain"
     # PVC annotations
     #
     # If you need this annotation include it under `values.yml` file and pvc.yml template will add it.
@@ -112,9 +137,9 @@ main:
     # Persistent Volume Access Mode
     #
     accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany 
     # Persistent Volume size
-    size: 1Gi
+    size: 5Gi
     # Use an existing PVC
     # existingClaim:
 
@@ -252,17 +277,17 @@ main:
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  limits:
+    cpu: 512m
+    memory: 512Mi
+  requests:
+    cpu: 256m
+    memory: 256Mi
 
   autoscaling:
-    enabled: false
+    enabled:  true
     minReplicas: 1
-    maxReplicas: 100
+    maxReplicas: 3
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 

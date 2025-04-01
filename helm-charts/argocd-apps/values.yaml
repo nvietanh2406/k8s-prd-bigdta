@@ -62,7 +62,8 @@ apps:
   #     path: helm-charts/kafka-connect/schema-registry
   #     valueFiles:
   #       - values.yaml
-
+  # SYSTEMS K8S
+  
   - name: argocd-apps
     destination:
       server: https://kubernetes.default.svc
@@ -91,7 +92,38 @@ apps:
       targetRevision: master
       path: helm-charts/prometheus-blackbox-exporter
       valueFiles:
+        - values.
+        
+  - name: metrics-server
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: metrics-server
+    source:
+      targetRevision: master
+      path: helm-charts/metrics-server
+      valueFiles:
         - values.yaml
+
+  - name: cert-manager-app
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: cert-manager
+    source:
+      targetRevision: master
+      path: helm-charts/external-secrets
+      valueFiles:
+        - values.yaml
+
+  # - name: external-secrets
+  #   destination:
+  #     server: https://kubernetes.default.svc
+  #     namespace: external-secrets
+  #   source:
+  #     targetRevision: master
+  #     path: helm-charts/external-secrets
+  #     valueFiles:
+  #       - values.yaml
+
   # # robusta manage chanel alert
   # - name: robusta
   #   destination:
@@ -123,15 +155,6 @@ apps:
   #     valueFiles:
   #       - values.yaml
 
-  - name: metrics-server
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: metrics-server
-    source:
-      targetRevision: master
-      path: helm-charts/metrics-server
-      valueFiles:
-        - values.yaml
 
   # - name: trivy-system
   #   destination:
@@ -142,26 +165,6 @@ apps:
   #     path: helm-charts/trivy-operator
   #     valueFiles:
   #       - values.yaml
-
-  - name: external-secrets
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: external-secrets
-    source:
-      targetRevision: master
-      path: helm-charts/external-secrets
-      valueFiles:
-        - values.yaml
-
-  - name: cert-manager-app
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: cert-manager
-    source:
-      targetRevision: master
-      path: helm-charts/external-secrets
-      valueFiles:
-        - values.yaml
 
   # - name: redis
   #   destination:
@@ -255,6 +258,18 @@ apps:
       valueFiles:
         - values.yaml
 
+  # Datalake Dev
+
+  - name: datalake-dev
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: datalake
+    source:
+      targetRevision: master
+      path: helm-charts/datalake
+      valueFiles:
+        - values.yaml
+        
   - name: spark-operator-app
     destination:
       server: https://kubernetes.default.svc

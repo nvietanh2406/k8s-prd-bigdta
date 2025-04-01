@@ -158,6 +158,14 @@ Create the role policy rules for the controller in every Spark job namespace
   - patch
   - delete
 - apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - update
+  - patch
+- apiGroups:
   - extensions
   - networking.k8s.io
   resources:
@@ -166,6 +174,8 @@ Create the role policy rules for the controller in every Spark job namespace
   - get
   - create
   - delete
+  - list
+  - watch
 - apiGroups:
   - sparkoperator.k8s.io
   resources:

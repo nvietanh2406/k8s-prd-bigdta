@@ -1,43 +1,59 @@
+{{/*
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+*/}}
+
+################################
+## Airflow Webserver Service
+#################################
+{{- if .Values.webserver.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "airflow.fullname" . }}-web
-  {{- if .Values.web.service.annotations }}
-  annotations:
-    {{- toYaml .Values.web.service.annotations | nindent 4 }}
-  {{- end }}
+  name: {{ include "airflow.fullname" . }}-webserver
   labels:
-    app: {{ include "airflow.labels.app" . }}
-    component: web
-    chart: {{ include "airflow.labels.chart" . }}
+    tier: airflow
+    component: webserver
     release: {{ .Release.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: {{ .Release.Service }}
+    {{- if or (.Values.labels) (.Values.webserver.labels) }}
+      {{- mustMerge .Values.webserver.labels .Values.labels | toYaml | nindent 4 }}
+    {{- end }}
+  {{- with .Values.webserver.service.annotations }}
+  annotations: {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  type: {{ .Values.web.service.type }}
+  type: {{ .Values.webserver.service.type }}
   selector:
-    app: {{ include "airflow.labels.app" . }}
-    component: web
+    tier: airflow
+    component: webserver
     release: {{ .Release.Name }}
-  sessionAffinity: {{ .Values.web.service.sessionAffinity }}
-  {{- if .Values.web.service.sessionAffinityConfig }}
-  sessionAffinityConfig:
-    {{- toYaml .Values.web.service.sessionAffinityConfig | nindent 4 }}
-  {{- end }}
   ports:
-    - name: web
-      appProtocol: {{ include "airflow.web.appProtocol" . | quote }}
-      protocol: TCP
-      port: {{ .Values.web.service.externalPort | default 8080 }}
-      {{- if and (eq .Values.web.service.type "NodePort") (.Values.web.service.nodePort.http) }}
-      nodePort: {{ .Values.web.service.nodePort.http }}
+  {{ range .Values.webserver.service.ports }}
+    -
+      {{- range $key, $val := . }}
+      {{ $key }}: {{ tpl (toString $val) $ }}
       {{- end }}
-      targetPort: 8080
-  {{- if eq .Values.web.service.type "LoadBalancer" }}
-  {{- if .Values.web.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.web.service.loadBalancerIP | quote }}
   {{- end }}
-  {{- if .Values.web.service.loadBalancerSourceRanges }}
-  loadBalancerSourceRanges:
-    {{- toYaml .Values.web.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- if .Values.webserver.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.webserver.service.loadBalancerIP }}
+  {{- end }}
+  {{- if .Values.webserver.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml .Values.webserver.service.loadBalancerSourceRanges | nindent 4 }}
   {{- end }}
 {{- end }}
