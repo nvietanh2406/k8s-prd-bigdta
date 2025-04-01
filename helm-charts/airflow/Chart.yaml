@@ -124,4 +124,4 @@ sources:
 type: application
 # version: 1.15.0
 # version: 1.31.3
-version: 1.27.x
+version: v1.27.7
