@@ -83,12 +83,8 @@ airflowVersion: "2.9.3"
 # Images
 images:
   airflow:
-    # repository: dockerhub.dsc.com.vn/dsc_datawarehouse/airflow
-    # tag: 2.9.3-openmetadata-1.1.1.0-minio
-
     repository: apache/airflow
     tag: 2.9.3
-    
     # Specifying digest takes precedence over tag.
     digest: ~
     pullPolicy: Always
