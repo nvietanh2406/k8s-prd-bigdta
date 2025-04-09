@@ -1,0 +1,16 @@
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: Changed ingress configuration
+      links:
+        - name: GitHub PR
+          url: https://github.com/FRINXio/helm-charts/pull/355
+apiVersion: v2
+appVersion: v9.0.1
+description: A Helm chart for Kubernetes
+icon: https://avatars.githubusercontent.com/u/23452093?s=200&v=4
+maintainers:
+- name: FRINX
+name: postgrest
+type: application
+version: 2.0.0
